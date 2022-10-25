@@ -12,6 +12,17 @@ def connect():
     )
 
 
+def check_user_existance(username, email):
+    connected_data_base = connect()
+    cursor = connected_data_base.cursor()
+    cursor.execute("SELECT username, email FROM Messenger.users")
+    for row in cursor:
+        if username == row[0]:
+            return f"""Username named: "{username}" already exists"""
+        if email == row[1]:
+            return f"""Email: "{email}" alredy exists"""
+
+
 def register(usertype="normal"):
     valid_email_format = re.compile(
         r"([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+"
@@ -42,13 +53,19 @@ def register(usertype="normal"):
         "email": email,
         "usertype": usertype,
     }
-
-    connected_data_base = connect()
-    cursor = connected_data_base.cursor()
-    cursor.execute(input_user_command, input_user_data)
-    connected_data_base.commit()
+    try:
+        connected_data_base = connect()
+        cursor = connected_data_base.cursor()
+        cursor.execute(input_user_command, input_user_data)
+        connected_data_base.commit()
+        connected_data_base.close()
+    except mysql.connector.IntegrityError:
+        print(check_user_existance(username, email))
+        return
+    except mysql.connector.DatabaseError:
+        print("Couldn't register user right now, try later...")
+        return
     print("User added correctly")
-    connected_data_base.close()
 
 
 register()
