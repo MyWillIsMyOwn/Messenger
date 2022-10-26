@@ -12,29 +12,35 @@ def connect():
     )
 
 
-def check_user_existance(username, email):
+def log_in():
+    pass
+
+
+def log_out():
+    pass
+
+
+def check_user_existance(username, email=None):
     connected_data_base = connect()
     cursor = connected_data_base.cursor()
     cursor.execute("SELECT username, email FROM Messenger.users")
     for row in cursor:
         if username == row[0]:
-            return f"""Username named: "{username}" already exists"""
-        if email == row[1]:
-            return f"""Email: "{email}" alredy exists"""
+            return True
 
 
 def register(usertype="normal"):
     valid_email_format = re.compile(
         r"([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+"
     )
-    username = input("Please enter new username... ")
-    password = input("Please enter your password... ")
     while True:
         email = input("Please enter your email... ")
         if re.fullmatch(valid_email_format, email):
             break
         else:
             print("Invalid email format\n")
+    username = input("Please enter new username... ")
+    password = input("Please enter your password... ")
 
     input_user_command = """INSERT INTO Messenger.users(
         username, 
@@ -60,7 +66,11 @@ def register(usertype="normal"):
         connected_data_base.commit()
         connected_data_base.close()
     except mysql.connector.IntegrityError:
-        print(check_user_existance(username, email))
+        # print(check_user_existance(username, email))
+        if check_user_existance(username, email):
+            print(f"""Username named: "{username}" already exists""")
+        else:
+            print(f"""Email: "{email}" alredy exists""")
         return
     except mysql.connector.DatabaseError:
         print("Couldn't register user right now, try later...")
@@ -69,3 +79,8 @@ def register(usertype="normal"):
 
 
 register()
+# def main():
+# while True:
+#     register()
+#     log_in()
+#     log_out()
