@@ -14,29 +14,36 @@ def connect():
 
 
 def log_in():
-    nickname = input("Enter username...")
+    nickname = input("Enter username...\n")
     if check_user_existance(nickname):
         connected_data_base = connect()
-        correct_password = connected_data_base.cursor()
-        correct_password.execute(
-            """SELECT password FROM Messenger.users where username = %s""", [nickname]
+        log_in_data = connected_data_base.cursor()
+        log_in_data.execute(
+            """SELECT password, usertype FROM Messenger.users where username = %s""",
+            [nickname],
         )
-        counter = 0
-        while counter < 3:
-            password = getpass.getpass("Enter your password... ")
-            if correct_password.fetchone() == (f"{password}",):
-                print("TAK")
 
-            # if password == correct_password: session()
+        counter = 0
+        data = log_in_data.fetchone()
+        correct_password = data[0]
+        usertype = data[1]
+        while counter < 3:
+            password = getpass.getpass("Enter your password... \n")
+            print("coor", correct_password)
+            if correct_password == password:
+                connected_data_base.close()
+                print("Logged in correctly...")
+                if usertype == ("admin"):
+                    print("admin")
+                else:
+                    print("user")
             else:
                 print("Invalid password, try again")
                 counter += 1
         print("Given wrong password 3 times, returning to main menu...")
-        main()
-        connected_data_base.close()
     else:
         print(
-            '''Looks like account with given username doesn't exist, in case of register type "register", to exit program type "exit"'''
+            """Looks like account with given username doesn't exist, in case of register type "register", to exit program type "exit"\n"""
         )
 
 
@@ -46,7 +53,11 @@ def log_out():
 
 
 def session(username, usertype):
-    pass
+    while True:
+        print(f"--{username}--")
+        user_command = input(
+            '''To print messages type "print", to write a message type "write", to log out type "logout"'''
+        )
 
 
 def show_users():
@@ -87,13 +98,13 @@ def register(usertype="normal"):
         r"([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+"
     )
     while True:
-        email = input("Please enter your email... ")
+        email = input("Please enter your email...\n")
         if re.fullmatch(valid_email_format, email):
             break
         else:
             print("Invalid email format\n")
-    username = input("Please enter new username... ")
-    password = getpass.getpass("Please enter your password... ")
+    username = input("Please enter new username...\n")
+    password = getpass.getpass("Please enter your password...\n")
 
     input_user_command = """INSERT INTO Messenger.users(
         username, 
@@ -131,7 +142,9 @@ def register(usertype="normal"):
 
 
 # register()
-# log_in()
+log_in()
+
+
 def main():
     while True:
         match input(
@@ -145,5 +158,5 @@ def main():
                 exit()
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
