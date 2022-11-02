@@ -1,11 +1,12 @@
 import mysql.connector
 import re
+import getpass
 
 
 def connect():
     return mysql.connector.connect(
         user="root",
-        password="Demon123@",
+        password="niema",
         host="127.0.0.1",
         database="Messenger",
         auth_plugin="auth_native_password",
@@ -13,20 +14,72 @@ def connect():
 
 
 def log_in():
-    pass
+    nickname = input("Enter username...")
+    if check_user_existance(nickname):
+        connected_data_base = connect()
+        correct_password = connected_data_base.cursor()
+        correct_password.execute(
+            """SELECT password FROM Messenger.users where username = %s""", [nickname]
+        )
+        counter = 0
+        while counter < 3:
+            password = getpass.getpass("Enter your password... ")
+            if correct_password.fetchone() == (f"{password}",):
+                print("TAK")
+
+            # if password == correct_password: session()
+            else:
+                print("Invalid password, try again")
+                counter += 1
+        print("Given wrong password 3 times, returning to main menu...")
+        main()
+        connected_data_base.close()
+    else:
+        print(
+            '''Looks like account with given username doesn't exist, in case of register type "register", to exit program type "exit"'''
+        )
 
 
 def log_out():
+    # main()
     pass
 
 
-def check_user_existance(username, email=None):
+def session(username, usertype):
+    pass
+
+
+def show_users():
+    connected_data_base = connect()
+    users = connected_data_base.cursor()
+    users.execute("SELECT username FROM Messenger.users")
+    for user in users:
+        print(user)
+    connected_data_base.close()
+
+
+def get_time():
+    # to show what time message was sent
+    pass
+
+
+def display_messages():
+    # who sent, who received, time, from particual user
+    pass
+
+
+def check_user_existance(username):
     connected_data_base = connect()
     cursor = connected_data_base.cursor()
     cursor.execute("SELECT username, email FROM Messenger.users")
     for row in cursor:
         if username == row[0]:
             return True
+    connected_data_base.close()
+
+
+def check_usertype():
+    pass
 
 
 def register(usertype="normal"):
@@ -40,7 +93,7 @@ def register(usertype="normal"):
         else:
             print("Invalid email format\n")
     username = input("Please enter new username... ")
-    password = input("Please enter your password... ")
+    password = getpass.getpass("Please enter your password... ")
 
     input_user_command = """INSERT INTO Messenger.users(
         username, 
@@ -66,8 +119,7 @@ def register(usertype="normal"):
         connected_data_base.commit()
         connected_data_base.close()
     except mysql.connector.IntegrityError:
-        # print(check_user_existance(username, email))
-        if check_user_existance(username, email):
+        if check_user_existance(username):
             print(f"""Username named: "{username}" already exists""")
         else:
             print(f"""Email: "{email}" alredy exists""")
@@ -78,9 +130,20 @@ def register(usertype="normal"):
     print("User added correctly")
 
 
-register()
-# def main():
-# while True:
-#     register()
-#     log_in()
-#     log_out()
+# register()
+# log_in()
+def main():
+    while True:
+        match input(
+            """Welcome to my messenger, already have an account? Type "login" to log in to app or "register" to create one. To quite type "exit"\n"""
+        ):
+            case "login":
+                log_in()
+            case "register":
+                register()
+            case "exit":
+                exit()
+
+
+if __name__ == "__main__":
+    main()
