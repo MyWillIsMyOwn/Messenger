@@ -46,9 +46,7 @@ def log_in():
                 counter += 1
         print("Given wrong password 3 times, returning to main menu...")
     else:
-        print(
-            """Looks like account with given username doesn't exist, in case of register type "register", to exit program type "exit"\n"""
-        )
+        return "Looks like account with given username doesn't exist, getting back to main menu...\n"
 
 
 def log_out(username):
@@ -59,18 +57,22 @@ def log_out(username):
 def user_session(username):
     while True:
         print(f"--{username}--")
-        user_command = input(
-            '''To print messages type "print", to write a message type "write", to log out type "logout"'''
-        )
+        user_command = input("Enter command")
         match user_command:
-            case "print":
+            case "help":
+                help("user_session")
+            case "messages":
                 pass
             case "write":
+                pass
+            case "users":
                 pass
             case "logout":
                 log_out(username)
             case _:
-                print("Unkown command")
+                print(
+                    """Unkown command, type "help" to display all available commands"""
+                )
 
 
 def admin_session(username):
@@ -78,7 +80,11 @@ def admin_session(username):
         print(f"--{username}-- as administrator")
         admin_command = input("Enter command")
         match admin_command:
-            case "print":
+            case "help":
+                help("admin_session")
+            case "users":
+                pass
+            case "messages":
                 pass
             case "write":
                 pass
@@ -92,7 +98,7 @@ def admin_session(username):
                     case "admin":
                         register(usertype="admin")
                     case _:
-                        print("Unkown command")
+                        print("Unkown usertype")
             case "delete":
                 pass
             case "logout":
@@ -122,7 +128,7 @@ def display_messages():
     pass
 
 
-def display_commands():
+def display_commands(func):
     commands = {
         "help": "shows all available commands",
         "login": "log in to messenger",
@@ -132,14 +138,30 @@ def display_commands():
         "users": "display all available users",
         "messages": "display 100 last messeges from particular user",
         "write": "to write a message to particular user",
+        "exit": "to quit the program",
     }
-    pass
+    main_list = ("login", "create", "exit")
+    user = ("users", "messages", "write", "logout")
+    admin = ("users", "messages", "write", "create", "delete", "logout")
+    match func:
+        case "main":
+            for key, value in commands.items():
+                if str(key).startswith(main_list):
+                    print(f"""Type: "{key}" to {value}""")
+        case "user_session":
+            for key, value in commands.items():
+                if str(key).startswith(user):
+                    print(f"""Type: "{key}" to {value}""")
+        case "admin_session":
+            for key, value in commands.items():
+                if str(key).startswith(admin):
+                    print(f"""Type: "{key}" to {value}""")
 
 
 def check_user_existance(username):
     connected_data_base = connect()
     cursor = connected_data_base.cursor()
-    cursor.execute("SELECT username, email FROM Messenger.users")
+    cursor.execute("SELECT username FROM Messenger.users")
     for row in cursor:
         if username == row[0]:
             return True
@@ -198,21 +220,23 @@ def register(usertype="normal"):
     print("User added correctly")
 
 
-# register()
-log_in()
+register()
+# display_commands("main")
 
 
 def main():
     while True:
-        match input(
-            """Welcome to my messenger, already have an account? Type "login" to log in to app or "create" to create one. To quite type "exit"\n"""
-        ):
+        match input():
             case "login":
                 log_in()
             case "create":
                 register()
             case "exit":
                 exit()
+            case "help":
+                display_commands("main")
+            case _:
+                print("""Type "help" to see available commands""")
 
 
 # if __name__ == "__main__":
