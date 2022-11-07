@@ -1,7 +1,9 @@
-from data_base import connect, check_user_existance
+from data_base import connect, UserFinder
 import mysql
 import re
 import getpass
+
+find = UserFinder()
 
 
 def register(usertype="normal"):
@@ -41,7 +43,7 @@ def register(usertype="normal"):
         connected_data_base.commit()
         connected_data_base.close()
     except mysql.connector.IntegrityError:
-        if check_user_existance(username):
+        if find.check_user_existance(username):
             print(f"""Username named: "{username}" already exists""")
         else:
             print(f"""Email: "{email}" alredy exists""")
@@ -54,7 +56,7 @@ def register(usertype="normal"):
 
 def remove_user(username, answer):
     if answer == "y":
-        if not check_user_existance(username):
+        if not find.check_user_existance(username):
             return
         connected_data_base = connect()
         choose_user = connected_data_base.cursor()
