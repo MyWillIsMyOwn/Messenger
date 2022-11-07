@@ -1,6 +1,6 @@
 from session import Session
+from user_maintance import Maintain
 from utils import display_commands
-from user_maintance import register
 
 
 def main():
@@ -10,7 +10,8 @@ def main():
                 session = Session()
                 session.log_in()
             case "create":
-                register()
+                register = Maintain()
+                register.register()
             case "exit":
                 exit()
             case "help":
