@@ -56,19 +56,23 @@ class Maintain:
         except mysql.connector.DatabaseError:
             print("Couldn't register user right now, try later...")
             return
-        print("User added correctly")
+        print(f"User {self.username} added correctly")
 
+
+class Remove:
     @staticmethod
-    def remove_user(username, answer):
+    def remove_user(username_to_delete, answer):
         if answer == "y":
-            if not find.check_user_existance(username):
+            if not find.check_user_existance(username_to_delete):
+                print(f"Couldn't find user named {username_to_delete}")
                 return
             connected_data_base = connect()
             choose_user = connected_data_base.cursor()
             choose_user.execute(
                 """DELETE FROM Messenger.users WHERE username = %s""",
-                [username],
+                [username_to_delete],
             )
             connected_data_base.commit()
             connected_data_base.close()
+            print(f"Account {username_to_delete} has been deleted")
         return

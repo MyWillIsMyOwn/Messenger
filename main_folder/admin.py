@@ -1,16 +1,17 @@
 from utils import Messages, display_commands
 from data_base import UserFinder
-from user_maintance import Maintain
+from user_maintance import Maintain, Remove
 
 find = UserFinder()
 message = Messages()
-# maintain = Maintain()
 
 
 class Admin:
     @staticmethod
     def admin_session(username):
         while True:
+            if not find.check_user_existance(username):
+                return
             print(f"--{username}-- as administrator")
             admin_command = input("Enter command\n")
             match admin_command:
@@ -46,17 +47,20 @@ class Admin:
                         case _:
                             print("Unkown usertype")
                 case "delete":
-                    remove = Maintain()
+                    user = input("Enter username to delete\n")
+                    remove = Remove()
                     remove.remove_user(
-                        username=input("Enter username to delete\n"),
+                        username_to_delete=user,
                         answer=input(
                             "Do you really want to delete your account ? y/n\n"
                         ),
                     )
+                    if not find.check_user_existance(username):
+                        return
                 case "logout":
                     print(f"User {username} logged out correctly")
                     return
                 case _:
                     print(
-                        """Unkown command, type "help" to display all available commands"""
+                        """Unkown command, type "help" to display all available commands\n"""
                     )

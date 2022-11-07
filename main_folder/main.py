@@ -17,7 +17,7 @@ def main():
             case "help":
                 display_commands("main")
             case _:
-                print("""Type "help" to see available commands""")
+                print("""Type "help" to see available commands\n""")
 
 
 if __name__ == "__main__":

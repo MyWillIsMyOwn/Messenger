@@ -1,6 +1,6 @@
 from utils import Messages, display_commands
 from data_base import UserFinder
-from user_maintance import Maintain
+from user_maintance import Remove
 
 find = UserFinder()
 message = Messages()
@@ -31,15 +31,16 @@ class User:
                     print(f"User {username} logged out correctly")
                     return
                 case "delete":
-                    remove = Maintain()
+                    remove = Remove()
                     remove.remove_user(
-                        username=username,
+                        username_to_delete=username,
                         answer=input(
                             "Do you really want to delete your account ? y/n\n"
                         ),
                     )
-                    return
+                    if not find.check_user_existance(username):
+                        return
                 case _:
                     print(
-                        """Unkown command, type "help" to display all available commands"""
+                        """Unkown command, type "help" to display all available commands\n"""
                     )

@@ -21,7 +21,6 @@ class UserFinder:
             if username == row[0]:
                 return True
         connected_data_base.close()
-        print(f"Couldn't find username named {username}")
         return False
 
     def print_users(self, txt):
@@ -29,6 +28,7 @@ class UserFinder:
         users = connected_data_base.cursor()
         users.execute("SELECT id, username FROM Messenger.users")
         cnt = 0
+        print("Users:\n")
         for (id, username) in users:
             if str(username).startswith(txt) and cnt < 10:
                 print(username)
