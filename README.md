@@ -1,14 +1,14 @@
 # This is messenger app.
 
 
-# It's key features include:
+## It's key features include:
 - User Registration: Users can create an account by providing necessary details, such as their username, password, and email address.
 - Login Functionality: Registered users can securely log in to their accounts using their credentials.
 - Messaging Capability: Users can compose and send messages to selected recipients of their choice.
 - Message History: The app maintains a record of all conversations, allowing users to view their entire message history with any selected recipient.
 
 
-# To run the messenger app, follow these steps:
+## To run the messenger app, follow these steps:
 - Download the repository containing the app's source code.
 - Ensure that Docker is installed on your system.
 - Open the terminal or command prompt and navigate to the main app folder.
