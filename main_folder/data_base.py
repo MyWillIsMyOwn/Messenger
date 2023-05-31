@@ -1,13 +1,15 @@
 import mysql.connector
+import os
 
 
 def connect():
     return mysql.connector.connect(
         user="root",
-        password="niema",
-        host="127.0.0.1",
+        password="niema123",
+        host="mysql",
         database="Messenger",
-        auth_plugin="auth_native_password",
+        auth_plugin="mysql_native_password",
+        port="3306",
     )
 
 
@@ -29,7 +31,7 @@ class UserFinder:
         users.execute("SELECT id, username FROM Messenger.users")
         cnt = 0
         print("Users:\n")
-        for (id, username) in users:
+        for id, username in users:
             if str(username).startswith(txt) and cnt < 10:
                 print(username)
                 cnt += 1

@@ -18,11 +18,12 @@ class Maintain:
             r"([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+"
         )
         while True:
-            if re.fullmatch(valid_email_format, self.email):
+            if re.fullmatch(valid_email_format, self.email) or self.email == "exit":
                 break
             else:
                 print("Invalid email format\n")
-                Maintain()
+                self.email = input("Please enter your email again...\n")
+                continue
 
         input_user_command = """INSERT INTO Messenger.users(
             username, 
@@ -53,8 +54,9 @@ class Maintain:
             else:
                 print(f"""Email: "{self.email}" alredy exists""")
             return
-        except mysql.connector.DatabaseError:
+        except mysql.connector.DatabaseError as e:
             print("Couldn't register user right now, try later...")
+            print(e)
             return
         print(f"User {self.username} added correctly")
 
@@ -74,5 +76,5 @@ class Remove:
             )
             connected_data_base.commit()
             connected_data_base.close()
-            print(f"Account {username_to_delete} has been deleted")
+            print(f"Account {username_to_delete} has been deleted\n")
         return
