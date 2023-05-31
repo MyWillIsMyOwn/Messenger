@@ -1,0 +1,26 @@
+version: '3'
+services:
+  app:
+    build: .
+    ports:
+      - "80:80"  
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=niema123
+      - MYSQL_DB=Messenger 
+    stdin_open: true
+    tty: true
+    command: python3.11 main_folder/main.py
+  mysql:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=niema123
+      - MYSQL_DATABASE=Messenger  
+    volumes:
+      - "./init.sql:/docker-entrypoint-initdb.d/init.sql"
+    ports:
+      - "3307:3306"  
+
+volumes:
+  db_data:  
