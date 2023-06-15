@@ -1,6 +1,6 @@
-from session import Session
-from user_maintance import Maintain
-from utils import display_commands
+from main_folder.session import Session
+from main_folder.user_maintance import Maintain
+from main_folder.utils import display_commands
 
 
 def main():

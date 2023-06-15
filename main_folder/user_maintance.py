@@ -1,4 +1,4 @@
-from data_base import connect, UserFinder
+from main_folder.data_base import connect, UserFinder
 import mysql
 import re
 import getpass

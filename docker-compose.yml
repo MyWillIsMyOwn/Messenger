@@ -11,7 +11,7 @@ services:
       - MYSQL_DB=Messenger 
     stdin_open: true
     tty: true
-    command: python3.11 main_folder/main.py
+    command: python3.11 -m main_folder.main
   mysql:
     image: mysql
     environment:

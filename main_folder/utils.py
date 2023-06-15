@@ -1,5 +1,5 @@
 from datetime import datetime
-from data_base import connect, UserFinder
+from main_folder.data_base import connect, UserFinder
 import mysql
 
 user = UserFinder()

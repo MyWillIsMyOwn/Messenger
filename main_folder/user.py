@@ -1,6 +1,6 @@
-from utils import Messages, display_commands
-from data_base import UserFinder
-from user_maintance import Remove
+from main_folder.utils import Messages, display_commands
+from main_folder.data_base import UserFinder
+from main_folder.user_maintance import Remove
 
 find = UserFinder()
 message = Messages()

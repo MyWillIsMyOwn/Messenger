@@ -14,4 +14,4 @@
 - Open the terminal or command prompt and navigate to the main app folder.
 - Run the command "docker-compose up" to create and start both containers required for the app.
 - Once both containers are successfully created, access the container named "messenger-app-1" by executing the command "docker exec -it messenger-app-1 sh".
-- Within the container, start the app by running the command "python3.11 main_folder/main.py".
+- Within the container, start the app by running the command "python3.11 -m main_folder.main".
